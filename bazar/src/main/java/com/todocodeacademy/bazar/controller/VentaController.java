@@ -30,7 +30,7 @@ public class VentaController {
     public Venta saveVenta(@RequestBody @Valid VentaDTO dto) {
         Venta venta = dtoToVenta(dto);
         service.saveVenta(venta);
-        return venta;
+        return service.findVenta(venta.getCodigo_venta());
     }
 
     @DeleteMapping ("/ventas/borrar/{id}")
