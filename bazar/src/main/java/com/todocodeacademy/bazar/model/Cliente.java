@@ -2,6 +2,7 @@ package com.todocodeacademy.bazar.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

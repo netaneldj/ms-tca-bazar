@@ -1,11 +1,15 @@
 package com.todocodeacademy.bazar.controller;
 
+import com.todocodeacademy.bazar.dto.ProductoDTO;
 import com.todocodeacademy.bazar.model.Producto;
 import com.todocodeacademy.bazar.service.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+
+import static com.todocodeacademy.bazar.utils.ProductoMapper.dtoToProducto;
 
 @RestController
 public class ProductoController {
@@ -23,9 +27,10 @@ public class ProductoController {
     }
 
     @PostMapping("/productos/crear")
-    public String saveProducto(@RequestBody Producto producto) {
+    public Producto saveProducto(@RequestBody @Valid ProductoDTO dto) {
+        Producto producto = dtoToProducto(dto);
         service.saveProducto(producto);
-        return "El producto fue creado correctamente";
+        return producto;
     }
 
     @DeleteMapping ("/productos/borrar/{id}")
@@ -34,8 +39,9 @@ public class ProductoController {
         return "El producto fue eliminado correctamente";
     }
 
-    @PutMapping ("/productos/editar")
-    public Producto editProducto(@RequestBody Producto producto) {
+    @PutMapping ("/productos/editar/{id}")
+    public Producto editProducto(@PathVariable Long id, @RequestBody @Valid ProductoDTO dto) {
+        Producto producto = dtoToProducto(dto);
         service.editProducto(producto);
         return service.findProducto(producto.getCodigo_producto());
     }

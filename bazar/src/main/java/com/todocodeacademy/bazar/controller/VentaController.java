@@ -1,11 +1,15 @@
 package com.todocodeacademy.bazar.controller;
 
+import com.todocodeacademy.bazar.dto.VentaDTO;
 import com.todocodeacademy.bazar.model.Venta;
 import com.todocodeacademy.bazar.service.IVentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+
+import static com.todocodeacademy.bazar.utils.VentaMapper.dtoToVenta;
 
 @RestController
 public class VentaController {
@@ -23,20 +27,22 @@ public class VentaController {
     }
 
     @PostMapping("/ventas/crear")
-    public String saveVenta(@RequestBody Venta producto) {
-        service.saveVenta(producto);
-        return "El producto fue creado correctamente";
+    public Venta saveVenta(@RequestBody @Valid VentaDTO dto) {
+        Venta venta = dtoToVenta(dto);
+        service.saveVenta(venta);
+        return venta;
     }
 
     @DeleteMapping ("/ventas/borrar/{id}")
     public String deleteVenta(@PathVariable Long id) {
         service.deleteVenta(id);
-        return "El producto fue eliminado correctamente";
+        return "La venta fue eliminada correctamente";
     }
 
-    @PutMapping ("/ventas/editar")
-    public Venta editVenta(@RequestBody Venta producto) {
-        service.editVenta(producto);
-        return service.findVenta(producto.getCodigo_venta());
+    @PutMapping ("/ventas/editar/{id}")
+    public Venta editVenta(@PathVariable Long id, @RequestBody @Valid VentaDTO dto) {
+        Venta venta = dtoToVenta(dto);
+        service.editVenta(venta);
+        return service.findVenta(venta.getCodigo_venta());
     }
 }

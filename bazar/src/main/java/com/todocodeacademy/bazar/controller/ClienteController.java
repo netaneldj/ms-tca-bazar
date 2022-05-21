@@ -1,11 +1,15 @@
 package com.todocodeacademy.bazar.controller;
 
+import com.todocodeacademy.bazar.dto.ClienteDTO;
 import com.todocodeacademy.bazar.model.Cliente;
 import com.todocodeacademy.bazar.service.IClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+
+import static com.todocodeacademy.bazar.utils.ClienteMapper.dtoToCliente;
 
 @RestController
 public class ClienteController {
@@ -23,9 +27,10 @@ public class ClienteController {
     }
 
     @PostMapping("/clientes/crear")
-    public String saveCliente(@RequestBody Cliente cliente) {
+    public Cliente saveCliente(@RequestBody @Valid ClienteDTO dto) {
+        Cliente cliente = dtoToCliente(dto);
         service.saveCliente(cliente);
-        return "El cliente fue creado correctamente";
+        return cliente;
     }
 
     @DeleteMapping ("/clientes/borrar/{id}")
@@ -34,8 +39,9 @@ public class ClienteController {
         return "El cliente fue eliminado correctamente";
     }
 
-    @PutMapping ("/clientes/editar")
-    public Cliente editCliente(@RequestBody Cliente cliente) {
+    @PutMapping ("/clientes/editar/{id}")
+    public Cliente editCliente(@PathVariable Long id, @RequestBody @Valid ClienteDTO dto) {
+        Cliente cliente = dtoToCliente(dto);
         service.editCliente(cliente);
         return service.findCliente(cliente.getId_cliente());
     }
