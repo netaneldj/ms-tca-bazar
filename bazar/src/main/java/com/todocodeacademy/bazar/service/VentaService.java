@@ -34,6 +34,7 @@ public class VentaService implements IVentaService{
     public void saveVenta(Venta venta) {
         venta.setFecha_venta(LocalDate.now());
         venta.setTotal(calculateTotalProductos(venta.getListaProductos()));
+        updateStock(venta.getListaProductos());
         repository.save(venta);
     }
 
@@ -47,6 +48,22 @@ public class VentaService implements IVentaService{
         venta.setFecha_venta(LocalDate.now());
         venta.setTotal(calculateTotalProductos(venta.getListaProductos()));
         repository.save(venta);
+    }
+
+    public boolean availableStock(List<Producto> listaProductos) {
+        for (Producto producto : listaProductos) {
+            Producto p = productoService.findProducto(producto.getCodigo_producto());
+            if (p.getCantidad_disponible() < 1) return false;
+        }
+        return true;
+    }
+
+    private void updateStock(List<Producto> listaProductos){
+        for(Producto producto : listaProductos){
+            Producto p = productoService.findProducto(producto.getCodigo_producto());
+            p.setCantidad_disponible(p.getCantidad_disponible()-1);
+            productoService.editProducto(p);
+        }
     }
 
     private Double calculateTotalProductos(List<Producto> listaProductos){

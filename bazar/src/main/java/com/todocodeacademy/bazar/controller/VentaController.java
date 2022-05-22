@@ -28,6 +28,7 @@ public class VentaController {
 
     @PostMapping("/ventas/crear")
     public Venta saveVenta(@RequestBody @Valid VentaDTO dto) {
+        if (!service.availableStock(dto.getListaProductos())) return null;
         Venta venta = dtoToVenta(dto);
         service.saveVenta(venta);
         return service.findVenta(venta.getCodigo_venta());

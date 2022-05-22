@@ -1,5 +1,6 @@
 package com.todocodeacademy.bazar.service;
 
+import com.todocodeacademy.bazar.model.Producto;
 import com.todocodeacademy.bazar.model.Venta;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface IVentaService {
     void deleteVenta(Long id);
 
     void editVenta(Venta producto);
+
+    public boolean availableStock(List<Producto> listaProductos);
 }
