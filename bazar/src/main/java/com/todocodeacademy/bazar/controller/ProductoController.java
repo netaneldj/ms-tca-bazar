@@ -26,6 +26,11 @@ public class ProductoController {
         return service.findProducto(id);
     }
 
+    @GetMapping("/productos/falta_stock")
+    public List<Producto> getProductosFaltaStock() {
+        return service.getProductosFaltaStock();
+    }
+
     @PostMapping("/productos/crear")
     public Producto saveProducto(@RequestBody @Valid ProductoDTO dto) {
         Producto producto = dtoToProducto(dto);

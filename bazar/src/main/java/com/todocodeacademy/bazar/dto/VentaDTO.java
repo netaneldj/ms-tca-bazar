@@ -16,4 +16,12 @@ public class VentaDTO {
     private List<Producto> listaProductos;
     @NotNull
     private Cliente unCliente;
+
+    public VentaDTO() {
+    }
+
+    public VentaDTO(List<Producto> listaProductos, Cliente unCliente) {
+        this.listaProductos = listaProductos;
+        this.unCliente = unCliente;
+    }
 }

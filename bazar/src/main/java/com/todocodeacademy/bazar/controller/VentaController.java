@@ -1,12 +1,16 @@
 package com.todocodeacademy.bazar.controller;
 
+import com.todocodeacademy.bazar.dto.ReporteVentasDTO;
 import com.todocodeacademy.bazar.dto.VentaDTO;
+import com.todocodeacademy.bazar.model.Producto;
 import com.todocodeacademy.bazar.model.Venta;
 import com.todocodeacademy.bazar.service.IVentaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.todocodeacademy.bazar.utils.VentaMapper.dtoToVenta;
@@ -24,6 +28,16 @@ public class VentaController {
     @GetMapping("/ventas/traer/{id}")
     public Venta getVenta(@PathVariable Long id) {
         return service.findVenta(id);
+    }
+
+    @GetMapping("/ventas/productos/{codigo_venta}")
+    public List<Producto> getProductosVenta(@PathVariable Long codigo_venta) {
+        return service.getProductosVenta(codigo_venta);
+    }
+
+    @GetMapping("/ventas/{fecha_venta}")
+    public ReporteVentasDTO getReporteVentas(@PathVariable("fecha_venta") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha_venta) {
+        return service.getReporteVentas(fecha_venta);
     }
 
     @PostMapping("/ventas/crear")

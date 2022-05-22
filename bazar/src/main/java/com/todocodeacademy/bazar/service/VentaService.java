@@ -1,5 +1,6 @@
 package com.todocodeacademy.bazar.service;
 
+import com.todocodeacademy.bazar.dto.ReporteVentasDTO;
 import com.todocodeacademy.bazar.model.Producto;
 import com.todocodeacademy.bazar.model.Venta;
 import com.todocodeacademy.bazar.repository.IVentaRepository;
@@ -56,6 +57,23 @@ public class VentaService implements IVentaService{
             if (p.getCantidad_disponible() < 1) return false;
         }
         return true;
+    }
+
+    @Override
+    public List<Producto> getProductosVenta(Long codigo_venta) {
+        return findVenta(codigo_venta).getListaProductos();
+    }
+
+    @Override
+    public ReporteVentasDTO getReporteVentas(LocalDate fecha_venta) {
+        ReporteVentasDTO dto = new ReporteVentasDTO();
+        Double monto = 0.0;
+        List<Venta> listVentasFecha = repository.findAll();
+        listVentasFecha.removeIf(v ->v.getFecha_venta().compareTo(fecha_venta) != 0);
+        for(Venta v: listVentasFecha) monto += v.getTotal();
+        dto.setCantidad_total_ventas(listVentasFecha.size());
+        dto.setMonto(monto);
+        return dto;
     }
 
     private void updateStock(List<Producto> listaProductos){

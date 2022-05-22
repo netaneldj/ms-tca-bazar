@@ -17,4 +17,13 @@ public class ClienteDTO {
     @NotNull
     @NotEmpty
     private String dni;
+
+    public ClienteDTO() {
+    }
+
+    public ClienteDTO(String nombre, String apellido, String dni) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+    }
 }

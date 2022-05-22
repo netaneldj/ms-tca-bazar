@@ -5,6 +5,7 @@ import com.todocodeacademy.bazar.repository.IProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,5 +36,14 @@ public class ProductoService implements IProductoService{
     @Override
     public void editProducto(Producto producto) {
         repository.save(producto);
+    }
+
+    @Override
+    public List<Producto> getProductosFaltaStock() {
+        List<Producto> listFaltaStock = new ArrayList<Producto>();
+        for(Producto p : getProductos()){
+            if(p.getCantidad_disponible() < 5) listFaltaStock.add(p);
+        }
+        return listFaltaStock;
     }
 }
