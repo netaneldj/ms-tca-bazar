@@ -1,5 +1,6 @@
 package com.todocodeacademy.bazar.controller;
 
+import com.todocodeacademy.bazar.dto.ClienteVentaDTO;
 import com.todocodeacademy.bazar.dto.ReporteVentasDTO;
 import com.todocodeacademy.bazar.dto.VentaDTO;
 import com.todocodeacademy.bazar.model.Producto;
@@ -38,6 +39,11 @@ public class VentaController {
     @GetMapping("/ventas/{fecha_venta}")
     public ReporteVentasDTO getReporteVentas(@PathVariable("fecha_venta") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fecha_venta) {
         return service.getReporteVentas(fecha_venta);
+    }
+
+    @GetMapping("/ventas/mayor_venta")
+    public ClienteVentaDTO getReporteMayorVenta() {
+        return service.getReporteMayorVenta();
     }
 
     @PostMapping("/ventas/crear")

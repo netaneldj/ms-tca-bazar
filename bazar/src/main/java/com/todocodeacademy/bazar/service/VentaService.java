@@ -1,5 +1,6 @@
 package com.todocodeacademy.bazar.service;
 
+import com.todocodeacademy.bazar.dto.ClienteVentaDTO;
 import com.todocodeacademy.bazar.dto.ReporteVentasDTO;
 import com.todocodeacademy.bazar.model.Producto;
 import com.todocodeacademy.bazar.model.Venta;
@@ -68,11 +69,31 @@ public class VentaService implements IVentaService{
     public ReporteVentasDTO getReporteVentas(LocalDate fecha_venta) {
         ReporteVentasDTO dto = new ReporteVentasDTO();
         Double monto = 0.0;
-        List<Venta> listVentasFecha = repository.findAll();
+        List<Venta> listVentasFecha = getVentas();
         listVentasFecha.removeIf(v ->v.getFecha_venta().compareTo(fecha_venta) != 0);
         for(Venta v: listVentasFecha) monto += v.getTotal();
         dto.setCantidad_total_ventas(listVentasFecha.size());
         dto.setMonto(monto);
+        return dto;
+    }
+
+    @Override
+    public ClienteVentaDTO getReporteMayorVenta() {
+        ClienteVentaDTO dto = new ClienteVentaDTO();
+        List<Venta> listVentas = getVentas();
+        Double maxMonto = listVentas.get(0).getTotal();
+        Long maxCodigoVenta = listVentas.get(0).getCodigo_venta();
+        for(Venta v: listVentas){
+            if(v.getTotal() > maxMonto){
+                maxMonto = v.getTotal();
+                maxCodigoVenta = v.getCodigo_venta();
+            }
+        }
+        Venta maxVenta = findVenta(maxCodigoVenta);
+        dto.setCodigo_venta(maxVenta.getCodigo_venta());
+        dto.setCantidad_total_productos(maxVenta.getListaProductos().size());
+        dto.setNombre_cliente(maxVenta.getUnCliente().getNombre());
+        dto.setApellido_cliente(maxVenta.getUnCliente().getApellido());
         return dto;
     }
 
