@@ -42,6 +42,7 @@ public class ClienteController {
     @PutMapping ("/clientes/editar/{id}")
     public Cliente editCliente(@PathVariable Long id, @RequestBody @Valid ClienteDTO dto) {
         Cliente cliente = dtoToCliente(dto);
+        cliente.setId_cliente(id);
         service.editCliente(cliente);
         return service.findCliente(cliente.getId_cliente());
     }

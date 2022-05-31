@@ -63,6 +63,7 @@ public class VentaController {
     @PutMapping ("/ventas/editar/{id}")
     public Venta editVenta(@PathVariable Long id, @RequestBody @Valid VentaDTO dto) {
         Venta venta = dtoToVenta(dto);
+        venta.setCodigo_venta(id);
         service.editVenta(venta);
         return service.findVenta(venta.getCodigo_venta());
     }
