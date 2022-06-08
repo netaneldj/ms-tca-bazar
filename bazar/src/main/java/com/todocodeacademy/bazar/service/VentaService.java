@@ -91,6 +91,7 @@ public class VentaService implements IVentaService{
         }
         Venta maxVenta = findVenta(maxCodigoVenta);
         dto.setCodigo_venta(maxVenta.getCodigo_venta());
+        dto.setTotal(maxVenta.getTotal());
         dto.setCantidad_total_productos(maxVenta.getListaProductos().size());
         dto.setNombre_cliente(maxVenta.getUnCliente().getNombre());
         dto.setApellido_cliente(maxVenta.getUnCliente().getApellido());

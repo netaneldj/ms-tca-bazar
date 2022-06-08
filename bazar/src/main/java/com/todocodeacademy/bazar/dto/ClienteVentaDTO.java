@@ -7,6 +7,9 @@ import lombok.Setter;
 @Setter
 public class ClienteVentaDTO {
     private Long codigo_venta;
+
+    private Double total;
+
     private int cantidad_total_productos;
     private String nombre_cliente;
     private String apellido_cliente;
