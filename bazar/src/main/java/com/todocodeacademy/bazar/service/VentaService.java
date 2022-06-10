@@ -2,6 +2,7 @@ package com.todocodeacademy.bazar.service;
 
 import com.todocodeacademy.bazar.dto.ClienteVentaDTO;
 import com.todocodeacademy.bazar.dto.ReporteVentasDTO;
+import com.todocodeacademy.bazar.model.Cliente;
 import com.todocodeacademy.bazar.model.Producto;
 import com.todocodeacademy.bazar.model.Venta;
 import com.todocodeacademy.bazar.repository.IVentaRepository;
@@ -37,6 +38,15 @@ public class VentaService implements IVentaService{
         venta.setFecha_venta(LocalDate.now());
         venta.setTotal(calculateTotalProductos(venta.getListaProductos()));
         updateStock(venta.getListaProductos());
+        Cliente c = clienteService.findCliente(venta.getUnCliente().getId_cliente());
+        venta.setUnCliente(c);
+        for(Producto p: venta.getListaProductos()){
+            Producto producto = productoService.findProducto(p.getCodigo_producto());
+            p.setCosto(producto.getCosto());
+            p.setMarca(producto.getMarca());
+            p.setCantidad_disponible(producto.getCantidad_disponible());
+            p.setNombre(producto.getNombre());
+        }
         repository.save(venta);
     }
 

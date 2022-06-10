@@ -4,6 +4,8 @@ import com.todocodeacademy.bazar.dto.ClienteDTO;
 import com.todocodeacademy.bazar.model.Cliente;
 import com.todocodeacademy.bazar.service.IClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,10 +29,10 @@ public class ClienteController {
     }
 
     @PostMapping("/clientes/crear")
-    public Cliente saveCliente(@RequestBody @Valid ClienteDTO dto) {
+    public ResponseEntity<Cliente> saveCliente(@RequestBody @Valid ClienteDTO dto) {
         Cliente cliente = dtoToCliente(dto);
         service.saveCliente(cliente);
-        return cliente;
+        return new ResponseEntity<Cliente>(cliente, null, HttpStatus.CREATED);
     }
 
     @DeleteMapping ("/clientes/borrar/{id}")

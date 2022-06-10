@@ -4,6 +4,8 @@ import com.todocodeacademy.bazar.dto.ProductoDTO;
 import com.todocodeacademy.bazar.model.Producto;
 import com.todocodeacademy.bazar.service.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,10 +34,10 @@ public class ProductoController {
     }
 
     @PostMapping("/productos/crear")
-    public Producto saveProducto(@RequestBody @Valid ProductoDTO dto) {
+    public ResponseEntity<Producto> saveProducto(@RequestBody @Valid ProductoDTO dto) {
         Producto producto = dtoToProducto(dto);
         service.saveProducto(producto);
-        return producto;
+        return new ResponseEntity<Producto>(producto, null, HttpStatus.CREATED);
     }
 
     @DeleteMapping ("/productos/borrar/{id}")
