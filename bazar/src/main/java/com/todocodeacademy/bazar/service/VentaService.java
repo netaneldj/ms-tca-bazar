@@ -34,16 +34,17 @@ public class VentaService implements IVentaService{
     }
 
     @Override
-    public void saveVenta(Venta venta) {
+    public boolean saveVenta(Venta venta) {
         venta.setFecha_venta(LocalDate.now());
         venta.setTotal(calculateTotalProductos(venta.getListaProductos()));
-        updateStock(venta.getListaProductos());
+        if (!updateStock(venta.getListaProductos())) return false;
         venta.setUnCliente(clienteService.findCliente(venta.getUnCliente().getId_cliente()));
         for(int i=0;  i < venta.getListaProductos().size(); i++){
             venta.getListaProductos().set(i,
                     productoService.findProducto(venta.getListaProductos().get(i).getCodigo_producto()));
         }
         repository.save(venta);
+        return true;
     }
 
     @Override
@@ -52,10 +53,17 @@ public class VentaService implements IVentaService{
     }
 
     @Override
-    public void editVenta(Venta venta) {
+    public boolean editVenta(Venta venta) {
         venta.setFecha_venta(LocalDate.now());
         venta.setTotal(calculateTotalProductos(venta.getListaProductos()));
+        if (!updateStock(venta.getListaProductos())) return false;
+        venta.setUnCliente(clienteService.findCliente(venta.getUnCliente().getId_cliente()));
+        for(int i=0;  i < venta.getListaProductos().size(); i++){
+            venta.getListaProductos().set(i,
+                    productoService.findProducto(venta.getListaProductos().get(i).getCodigo_producto()));
+        }
         repository.save(venta);
+        return true;
     }
 
     public boolean availableStock(List<Producto> listaProductos) {
@@ -104,12 +112,14 @@ public class VentaService implements IVentaService{
         return dto;
     }
 
-    private void updateStock(List<Producto> listaProductos){
+    private boolean updateStock(List<Producto> listaProductos){
         for(Producto producto : listaProductos){
             Producto p = productoService.findProducto(producto.getCodigo_producto());
+            if (p.getCantidad_disponible() < 1) return false;
             p.setCantidad_disponible(p.getCantidad_disponible()-1);
             productoService.editProducto(p);
         }
+        return true;
     }
 
     private Double calculateTotalProductos(List<Producto> listaProductos){

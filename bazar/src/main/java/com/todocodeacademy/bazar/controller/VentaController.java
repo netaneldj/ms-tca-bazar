@@ -52,21 +52,21 @@ public class VentaController {
     public ResponseEntity<Venta> saveVenta(@RequestBody @Valid VentaDTO dto) {
         if (!service.availableStock(dto.getListaProductos())) return null;
         Venta venta = dtoToVenta(dto);
-        service.saveVenta(venta);
+        if (!service.saveVenta(venta)) return new ResponseEntity<Venta>(null, null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Venta>(service.findVenta(venta.getCodigo_venta()), null, HttpStatus.CREATED);
     }
 
     @DeleteMapping ("/ventas/borrar/{id}")
-    public String deleteVenta(@PathVariable Long id) {
+    public ResponseEntity<String> deleteVenta(@PathVariable Long id) {
         service.deleteVenta(id);
-        return "La venta fue eliminada correctamente";
+        return new ResponseEntity<String>("La venta fue eliminada correctamente", null, HttpStatus.OK);
     }
 
     @PutMapping ("/ventas/editar/{id}")
-    public Venta editVenta(@PathVariable Long id, @RequestBody @Valid VentaDTO dto) {
+    public ResponseEntity<Venta> editVenta(@PathVariable Long id, @RequestBody @Valid VentaDTO dto) {
         Venta venta = dtoToVenta(dto);
         venta.setCodigo_venta(id);
-        service.editVenta(venta);
-        return service.findVenta(venta.getCodigo_venta());
+        if (!service.editVenta(venta)) return new ResponseEntity<Venta>(null, null, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Venta>(service.findVenta(venta.getCodigo_venta()), null, HttpStatus.OK);
     }
 }
