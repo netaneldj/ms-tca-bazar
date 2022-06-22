@@ -36,16 +36,16 @@ public class ClienteController {
     }
 
     @DeleteMapping ("/clientes/borrar/{id}")
-    public String deleteCliente(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCliente(@PathVariable Long id) {
         service.deleteCliente(id);
-        return "El cliente fue eliminado correctamente";
+        return new ResponseEntity<String>("El cliente fue eliminado correctamente", null, HttpStatus.OK);
     }
 
     @PutMapping ("/clientes/editar/{id}")
-    public Cliente editCliente(@PathVariable Long id, @RequestBody @Valid ClienteDTO dto) {
+    public ResponseEntity<Cliente> editCliente(@PathVariable Long id, @RequestBody @Valid ClienteDTO dto) {
         Cliente cliente = dtoToCliente(dto);
         cliente.setId_cliente(id);
         service.editCliente(cliente);
-        return service.findCliente(cliente.getId_cliente());
+        return new ResponseEntity<Cliente>(cliente, null, HttpStatus.OK);
     }
 }
