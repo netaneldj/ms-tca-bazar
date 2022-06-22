@@ -13,15 +13,15 @@ import java.util.List;
 @Setter
 public class VentaDTO {
     @NotNull
-    private List<Producto> listaProductos;
+    private List<Producto> lista_productos;
     @NotNull
-    private Cliente unCliente;
+    private Cliente un_cliente;
 
     public VentaDTO() {
     }
 
-    public VentaDTO(List<Producto> listaProductos, Cliente unCliente) {
-        this.listaProductos = listaProductos;
-        this.unCliente = unCliente;
+    public VentaDTO(List<Producto> lista_productos, Cliente un_cliente) {
+        this.lista_productos = lista_productos;
+        this.un_cliente = un_cliente;
     }
 }

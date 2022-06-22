@@ -2,7 +2,6 @@ package com.todocodeacademy.bazar.service;
 
 import com.todocodeacademy.bazar.dto.ClienteVentaDTO;
 import com.todocodeacademy.bazar.dto.ReporteVentasDTO;
-import com.todocodeacademy.bazar.model.Cliente;
 import com.todocodeacademy.bazar.model.Producto;
 import com.todocodeacademy.bazar.model.Venta;
 import com.todocodeacademy.bazar.repository.IVentaRepository;
@@ -34,16 +33,17 @@ public class VentaService implements IVentaService{
     }
 
     @Override
-    public void saveVenta(Venta venta) {
+    public boolean saveVenta(Venta venta) {
         venta.setFecha_venta(LocalDate.now());
-        venta.setTotal(calculateTotalProductos(venta.getListaProductos()));
-        updateStock(venta.getListaProductos());
-        venta.setUnCliente(clienteService.findCliente(venta.getUnCliente().getId_cliente()));
-        for(int i=0;  i < venta.getListaProductos().size(); i++){
-            venta.getListaProductos().set(i,
-                    productoService.findProducto(venta.getListaProductos().get(i).getCodigo_producto()));
+        venta.setTotal(calculateTotalProductos(venta.getLista_productos()));
+        if (!updateStock(venta.getLista_productos())) return false;
+        venta.setUn_cliente(clienteService.findCliente(venta.getUn_cliente().getId_cliente()));
+        for(int i=0;  i < venta.getLista_productos().size(); i++){
+            venta.getLista_productos().set(i,
+                    productoService.findProducto(venta.getLista_productos().get(i).getCodigo_producto()));
         }
         repository.save(venta);
+        return true;
     }
 
     @Override
@@ -52,10 +52,17 @@ public class VentaService implements IVentaService{
     }
 
     @Override
-    public void editVenta(Venta venta) {
+    public boolean editVenta(Venta venta) {
         venta.setFecha_venta(LocalDate.now());
-        venta.setTotal(calculateTotalProductos(venta.getListaProductos()));
+        venta.setTotal(calculateTotalProductos(venta.getLista_productos()));
+        if (!updateStock(venta.getLista_productos())) return false;
+        venta.setUn_cliente(clienteService.findCliente(venta.getUn_cliente().getId_cliente()));
+        for(int i=0;  i < venta.getLista_productos().size(); i++){
+            venta.getLista_productos().set(i,
+                    productoService.findProducto(venta.getLista_productos().get(i).getCodigo_producto()));
+        }
         repository.save(venta);
+        return true;
     }
 
     public boolean availableStock(List<Producto> listaProductos) {
@@ -68,7 +75,7 @@ public class VentaService implements IVentaService{
 
     @Override
     public List<Producto> getProductosVenta(Long codigo_venta) {
-        return findVenta(codigo_venta).getListaProductos();
+        return findVenta(codigo_venta).getLista_productos();
     }
 
     @Override
@@ -98,18 +105,20 @@ public class VentaService implements IVentaService{
         Venta maxVenta = findVenta(maxCodigoVenta);
         dto.setCodigo_venta(maxVenta.getCodigo_venta());
         dto.setTotal(maxVenta.getTotal());
-        dto.setCantidad_total_productos(maxVenta.getListaProductos().size());
-        dto.setNombre_cliente(maxVenta.getUnCliente().getNombre());
-        dto.setApellido_cliente(maxVenta.getUnCliente().getApellido());
+        dto.setCantidad_total_productos(maxVenta.getLista_productos().size());
+        dto.setNombre_cliente(maxVenta.getUn_cliente().getNombre());
+        dto.setApellido_cliente(maxVenta.getUn_cliente().getApellido());
         return dto;
     }
 
-    private void updateStock(List<Producto> listaProductos){
+    private boolean updateStock(List<Producto> listaProductos){
         for(Producto producto : listaProductos){
             Producto p = productoService.findProducto(producto.getCodigo_producto());
+            if (p.getCantidad_disponible() < 1) return false;
             p.setCantidad_disponible(p.getCantidad_disponible()-1);
             productoService.editProducto(p);
         }
+        return true;
     }
 
     private Double calculateTotalProductos(List<Producto> listaProductos){

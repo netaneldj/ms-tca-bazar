@@ -41,16 +41,16 @@ public class ProductoController {
     }
 
     @DeleteMapping ("/productos/borrar/{id}")
-    public String deleteProducto(@PathVariable Long id) {
+    public ResponseEntity<String> deleteProducto(@PathVariable Long id) {
         service.deleteProducto(id);
-        return "El producto fue eliminado correctamente";
+        return new ResponseEntity<String>("El producto fue eliminado correctamente", null, HttpStatus.OK);
     }
 
     @PutMapping ("/productos/editar/{id}")
-    public Producto editProducto(@PathVariable Long id, @RequestBody @Valid ProductoDTO dto) {
+    public ResponseEntity<Producto> editProducto(@PathVariable Long id, @RequestBody @Valid ProductoDTO dto) {
         Producto producto = dtoToProducto(dto);
         producto.setCodigo_producto(id);
         service.editProducto(producto);
-        return service.findProducto(producto.getCodigo_producto());
+        return new ResponseEntity<Producto>(producto, null, HttpStatus.OK);
     }
 }

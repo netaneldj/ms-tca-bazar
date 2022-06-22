@@ -13,11 +13,11 @@ public interface IVentaService {
 
     Venta findVenta(Long id);
 
-    void saveVenta(Venta producto);
+    boolean saveVenta(Venta producto);
 
     void deleteVenta(Long id);
 
-    void editVenta(Venta producto);
+    boolean editVenta(Venta producto);
 
     public boolean availableStock(List<Producto> listaProductos);
 
