@@ -50,7 +50,7 @@ public class VentaController {
 
     @PostMapping("/ventas/crear")
     public ResponseEntity<Venta> saveVenta(@RequestBody @Valid VentaDTO dto) {
-        if (!service.availableStock(dto.getListaProductos())) return null;
+        if (!service.availableStock(dto.getLista_productos())) return null;
         Venta venta = dtoToVenta(dto);
         if (!service.saveVenta(venta)) return new ResponseEntity<Venta>(null, null, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<Venta>(service.findVenta(venta.getCodigo_venta()), null, HttpStatus.CREATED);

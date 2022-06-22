@@ -6,15 +6,15 @@ import com.todocodeacademy.bazar.model.Venta;
 public class VentaMapper {
     public static Venta dtoToVenta(VentaDTO dto){
         Venta venta = new Venta();
-        venta.setListaProductos(dto.getListaProductos());
-        venta.setUnCliente(dto.getUnCliente());
+        venta.setLista_productos(dto.getLista_productos());
+        venta.setUn_cliente(dto.getUn_cliente());
         return venta;
     }
 
     public static VentaDTO ventaToDto(Venta venta){
         VentaDTO dto = new VentaDTO();
-        dto.setListaProductos(venta.getListaProductos());
-        dto.setUnCliente(venta.getUnCliente());
+        dto.setLista_productos(venta.getLista_productos());
+        dto.setUn_cliente(venta.getUn_cliente());
         return dto;
     }
 }
