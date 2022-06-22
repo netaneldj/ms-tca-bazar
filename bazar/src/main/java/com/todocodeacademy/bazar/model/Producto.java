@@ -1,6 +1,7 @@
 package com.todocodeacademy.bazar.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @Table(name = "producto")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Producto {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE)
